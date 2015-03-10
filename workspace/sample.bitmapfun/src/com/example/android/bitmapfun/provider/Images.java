@@ -1,17 +1,10 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2012 The Android Open Source Project Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package com.example.android.bitmapfun.provider;
@@ -22,15 +15,11 @@ package com.example.android.bitmapfun.provider;
 public class Images {
 
     /**
-     * This are PicasaWeb URLs and could potentially change. Ideally the PicasaWeb API should be
-     * used to fetch the URLs.
-     *
-     * Credit to Romain Guy for the photos:
-     * http://www.curious-creature.org/
-     * https://plus.google.com/109538161516040592207/about
-     * http://www.flickr.com/photos/romainguy
+     * This are PicasaWeb URLs and could potentially change. Ideally the PicasaWeb API should be used to fetch the URLs.
+     * Credit to Romain Guy for the photos: http://www.curious-creature.org/
+     * https://plus.google.com/109538161516040592207/about http://www.flickr.com/photos/romainguy
      */
-    public final static String[] imageUrls = new String[] {
+    public final static String[] imageUrls      = new String[] {
             "https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg",
             "https://lh4.googleusercontent.com/--dq8niRp7W4/URquVgmXvgI/AAAAAAAAAbs/-gnuLQfNnBA/s1024/A%252520Song%252520of%252520Ice%252520and%252520Fire.jpg",
             "https://lh5.googleusercontent.com/-7qZeDtRKFKc/URquWZT1gOI/AAAAAAAAAbs/hqWgteyNXsg/s1024/Another%252520Rockaway%252520Sunset.jpg",
@@ -129,17 +118,12 @@ public class Images {
             "https://lh5.googleusercontent.com/-biyiyWcJ9MU/URqvKculiAI/AAAAAAAAAbs/jyPsCplJOpE/s1024/Windmill.jpg",
             "https://lh4.googleusercontent.com/-PDT167_xRdA/URqvK36mLcI/AAAAAAAAAbs/oi2ik9QseMI/s1024/Windmills.jpg",
             "https://lh5.googleusercontent.com/-kI_QdYx7VlU/URqvLXCB6gI/AAAAAAAAAbs/N31vlZ6u89o/s1024/Yet%252520Another%252520Rockaway%252520Sunset.jpg",
-            "https://lh4.googleusercontent.com/-e9NHZ5k5MSs/URqvMIBZjtI/AAAAAAAAAbs/1fV810rDNfQ/s1024/Yosemite%252520Tree.jpg",
-    };
+            "https://lh4.googleusercontent.com/-e9NHZ5k5MSs/URqvMIBZjtI/AAAAAAAAAbs/1fV810rDNfQ/s1024/Yosemite%252520Tree.jpg", };
 
     /**
-     * This are PicasaWeb thumbnail URLs and could potentially change. Ideally the PicasaWeb API
-     * should be used to fetch the URLs.
-     *
-     * Credit to Romain Guy for the photos:
-     * http://www.curious-creature.org/
-     * https://plus.google.com/109538161516040592207/about
-     * http://www.flickr.com/photos/romainguy
+     * This are PicasaWeb thumbnail URLs and could potentially change. Ideally the PicasaWeb API should be used to fetch
+     * the URLs. Credit to Romain Guy for the photos: http://www.curious-creature.org/
+     * https://plus.google.com/109538161516040592207/about http://www.flickr.com/photos/romainguy
      */
     public final static String[] imageThumbUrls = new String[] {
             "https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s160-c/A%252520Photographer.jpg",
@@ -240,6 +224,5 @@ public class Images {
             "https://lh5.googleusercontent.com/-biyiyWcJ9MU/URqvKculiAI/AAAAAAAAAbs/jyPsCplJOpE/s160-c/Windmill.jpg",
             "https://lh4.googleusercontent.com/-PDT167_xRdA/URqvK36mLcI/AAAAAAAAAbs/oi2ik9QseMI/s160-c/Windmills.jpg",
             "https://lh5.googleusercontent.com/-kI_QdYx7VlU/URqvLXCB6gI/AAAAAAAAAbs/N31vlZ6u89o/s160-c/Yet%252520Another%252520Rockaway%252520Sunset.jpg",
-            "https://lh4.googleusercontent.com/-e9NHZ5k5MSs/URqvMIBZjtI/AAAAAAAAAbs/1fV810rDNfQ/s160-c/Yosemite%252520Tree.jpg",
-    };
+            "https://lh4.googleusercontent.com/-e9NHZ5k5MSs/URqvMIBZjtI/AAAAAAAAAbs/1fV810rDNfQ/s160-c/Yosemite%252520Tree.jpg", };
 }

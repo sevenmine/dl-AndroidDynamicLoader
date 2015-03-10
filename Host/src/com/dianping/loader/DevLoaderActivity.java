@@ -45,65 +45,64 @@ public class DevLoaderActivity extends MyActivity {
 	private RepositoryManager repoManager;
 	private SiteSpec site;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		repoManager = ((MyApplication) getApplication()).repositoryManager();
-		text = new TextView(this);
-		text.setLayoutParams(new ViewGroup.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
-		setContentView(text);
+        repoManager = ((MyApplication) getApplication()).repositoryManager();
+        text = new TextView(this);
+        text.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                        ViewGroup.LayoutParams.MATCH_PARENT));
+        setContentView(text);
 
-		int port = getIntent().getIntExtra("port", 5036);
-		server = new MyHttpServer(port);
-		try {
-			server.start();
-			println("server started on port " + port);
-		} catch (Exception e) {
-			print("unable to start server on port " + port + ": ");
-			println(e);
-		}
-	}
+        int port = getIntent().getIntExtra("port", 5036);
+        server = new MyHttpServer(port);
+        try {
+            server.start();
+            println("server started on port " + port);
+        } catch (Exception e) {
+            print("unable to start server on port " + port + ": ");
+            println(e);
+        }
+    }
 
-	@Override
-	protected void onDestroy() {
-		try {
-			server.stop();
-		} catch (Exception e) {
-		}
-		super.onDestroy();
-	}
+    @Override
+    protected void onDestroy() {
+        try {
+            server.stop();
+        } catch (Exception e) {
+        }
+        super.onDestroy();
+    }
 
-	private void print(final Object obj) {
-		if (Thread.currentThread().getId() == Looper.getMainLooper()
-				.getThread().getId()) {
-			text.append(String.valueOf(obj));
-		} else {
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					print(obj);
-				}
-			});
-		}
-	}
+    private void print(final Object obj) {
+        if (Thread.currentThread().getId() == Looper.getMainLooper().getThread().getId()) {
+            text.append(String.valueOf(obj));
+        } else {
+            runOnUiThread(new Runnable() {
 
-	private void println(final Object obj) {
-		if (Thread.currentThread().getId() == Looper.getMainLooper()
-				.getThread().getId()) {
-			text.append(String.valueOf(obj));
-			text.append("\n");
-		} else {
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					println(obj);
-				}
-			});
-		}
-	}
+                @Override
+                public void run() {
+                    print(obj);
+                }
+            });
+        }
+    }
+
+    private void println(final Object obj) {
+        if (Thread.currentThread().getId() == Looper.getMainLooper().getThread().getId()) {
+            text.append(String.valueOf(obj));
+            text.append("\n");
+        } else {
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    println(obj);
+                }
+            });
+        }
+    }
 
 	/**
 	 * GET /list<br>

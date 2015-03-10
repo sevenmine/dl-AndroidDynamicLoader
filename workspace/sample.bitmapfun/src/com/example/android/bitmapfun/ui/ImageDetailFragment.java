@@ -1,17 +1,10 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2012 The Android Open Source Project Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package com.example.android.bitmapfun.ui;
@@ -37,11 +30,12 @@ import com.example.android.bitmapfun.util.ImageFetcher;
  * imageUrl : string
  */
 public class ImageDetailFragment extends Fragment implements View.OnClickListener {
+
     private static final String IMAGE_CACHE_DIR = "images";
 
-    private String mImageUrl;
-    private ImageView mImageView;
-    private ImageFetcher mImageFetcher;
+    private String              mImageUrl;
+    private ImageView           mImageView;
+    private ImageFetcher        mImageFetcher;
 
     /**
      * Populate image using a url from extras, use the convenience factory method
@@ -53,10 +47,9 @@ public class ImageDetailFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-    	
-    	MyResources res = MyResources.getResource(ImageGridFragment.class);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        MyResources res = MyResources.getResource(ImageGridFragment.class);
         final View v = res.inflate(getActivity(), R.layout.image_detail_fragment, container, false);
         mImageView = (ImageView) v.findViewById(R.id.imageView);
         return v;
@@ -82,15 +75,14 @@ public class ImageDetailFragment extends Fragment implements View.OnClickListene
         // cache.
         final int longest = (height > width ? height : width) / 2;
 
-        ImageCache.ImageCacheParams cacheParams =
-                new ImageCache.ImageCacheParams(getActivity(), IMAGE_CACHE_DIR);
+        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(getActivity(), IMAGE_CACHE_DIR);
         cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
 
         // The ImageFetcher takes care of loading images into our ImageView children asynchronously
         mImageFetcher = new ImageFetcher(getActivity(), longest);
         mImageFetcher.addImageCache(getFragmentManager(), cacheParams);
         mImageFetcher.setImageFadeIn(false);
-        if(!TextUtils.isEmpty(mImageUrl)) {
+        if (!TextUtils.isEmpty(mImageUrl)) {
             mImageFetcher.loadImage(mImageUrl, mImageView);
         }
 
@@ -130,13 +122,13 @@ public class ImageDetailFragment extends Fragment implements View.OnClickListene
         super.onDestroy();
         mImageFetcher.closeCache();
     }
-    
+
     /**
-     * Set on the ImageView in the ViewPager children fragments, to enable/disable low profile mode
-     * when the ImageView is touched.
+     * Set on the ImageView in the ViewPager children fragments, to enable/disable low profile mode when the ImageView
+     * is touched.
      */
     @Override
     public void onClick(View v) {
-    	getActivity().finish();
+        getActivity().finish();
     }
 }

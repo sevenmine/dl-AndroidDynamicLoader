@@ -1,17 +1,10 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2012 The Android Open Source Project Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package com.example.android.bitmapfun.ui;
@@ -43,25 +36,26 @@ import com.example.android.bitmapfun.util.ImageCache.ImageCacheParams;
 import com.example.android.bitmapfun.util.ImageFetcher;
 
 /**
- * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView
- * implementation with the key addition being the ImageWorker class w/ImageCache to load children
- * asynchronously, keeping the UI nice and smooth and caching thumbnails for quick retrieval. The
- * cache is retained over configuration changes like orientation change so the images are populated
- * quickly if, for example, the user rotates the device.
+ * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView implementation with the
+ * key addition being the ImageWorker class w/ImageCache to load children asynchronously, keeping the UI nice and smooth
+ * and caching thumbnails for quick retrieval. The cache is retained over configuration changes like orientation change
+ * so the images are populated quickly if, for example, the user rotates the device.
  */
 public class ImageGridFragment extends Fragment implements AdapterView.OnItemClickListener {
-    private static final String TAG = "ImageGridFragment";
+
+    private static final String TAG             = "ImageGridFragment";
     private static final String IMAGE_CACHE_DIR = "thumbs";
 
-    private int mImageThumbSize;
-    private int mImageThumbSpacing;
-    private ImageAdapter mAdapter;
-    private ImageFetcher mImageFetcher;
+    private int                 mImageThumbSize;
+    private int                 mImageThumbSpacing;
+    private ImageAdapter        mAdapter;
+    private ImageFetcher        mImageFetcher;
 
     /**
      * Empty constructor as per the Fragment documentation
      */
-    public ImageGridFragment() {}
+    public ImageGridFragment(){
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,15 +81,15 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    	MyResources res = MyResources.getResource(ImageGridFragment.class);
+        MyResources res = MyResources.getResource(ImageGridFragment.class);
         final View v = res.inflate(getActivity(), R.layout.image_grid_fragment, container, false);
         final GridView mGridView = (GridView) v.findViewById(R.id.gridView);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
         mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
                 // Pause fetcher to ensure smoother scrolling when flinging
@@ -107,8 +101,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
 
@@ -116,23 +109,22 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         // number of columns and the width of each column. The width of each column is variable
         // as the GridView has stretchMode=columnWidth. The column width is used to set the height
         // of each view so we get nice square thumbnails.
-        mGridView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        if (mAdapter.getNumColumns() == 0) {
-                            final int numColumns = (int) Math.floor(
-                                    mGridView.getWidth() / (mImageThumbSize + mImageThumbSpacing));
-                            if (numColumns > 0) {
-                                final int columnWidth =
-                                        (mGridView.getWidth() / numColumns) - mImageThumbSpacing;
-                                mAdapter.setNumColumns(numColumns);
-                                mAdapter.setItemHeight(columnWidth);
-                                Log.d(TAG, "onCreateView - numColumns set to " + numColumns);
-                            }
-                        }
+        mGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                if (mAdapter.getNumColumns() == 0) {
+                    final int numColumns = (int) Math.floor(mGridView.getWidth()
+                                                            / (mImageThumbSize + mImageThumbSpacing));
+                    if (numColumns > 0) {
+                        final int columnWidth = (mGridView.getWidth() / numColumns) - mImageThumbSpacing;
+                        mAdapter.setNumColumns(numColumns);
+                        mAdapter.setItemHeight(columnWidth);
+                        Log.d(TAG, "onCreateView - numColumns set to " + numColumns);
                     }
-                });
+                }
+            }
+        });
 
         return v;
     }
@@ -160,29 +152,27 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		Intent i = new Intent(Intent.ACTION_VIEW,
-				Uri.parse(MyApplication.PRIMARY_SCHEME + "://image"));
-		i.putExtra("imageUrl", Images.imageUrls[(int) id]);
-		startActivity(i);
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(MyApplication.PRIMARY_SCHEME + "://image"));
+        i.putExtra("imageUrl", Images.imageUrls[(int) id]);
+        startActivity(i);
     }
 
     /**
-     * The main adapter that backs the GridView. This is fairly standard except the number of
-     * columns in the GridView is used to create a fake top row of empty views as we use a
-     * transparent ActionBar and don't want the real top row of images to start off covered by it.
+     * The main adapter that backs the GridView. This is fairly standard except the number of columns in the GridView is
+     * used to create a fake top row of empty views as we use a transparent ActionBar and don't want the real top row of
+     * images to start off covered by it.
      */
     private class ImageAdapter extends BaseAdapter {
 
-        private final Context mContext;
-        private int mItemHeight = 0;
-        private int mNumColumns = 0;
+        private final Context         mContext;
+        private int                   mItemHeight = 0;
+        private int                   mNumColumns = 0;
         private GridView.LayoutParams mImageViewLayoutParams;
 
-        public ImageAdapter(Context context) {
+        public ImageAdapter(Context context){
             super();
             mContext = context;
-            mImageViewLayoutParams = new GridView.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            mImageViewLayoutParams = new GridView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         }
 
         @Override
@@ -240,9 +230,8 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         }
 
         /**
-         * Sets the item height. Useful for when we know the column width so the height can be set
-         * to match.
-         *
+         * Sets the item height. Useful for when we know the column width so the height can be set to match.
+         * 
          * @param height
          */
         public void setItemHeight(int height) {
@@ -250,8 +239,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 return;
             }
             mItemHeight = height;
-            mImageViewLayoutParams =
-                    new GridView.LayoutParams(LayoutParams.MATCH_PARENT, mItemHeight);
+            mImageViewLayoutParams = new GridView.LayoutParams(LayoutParams.MATCH_PARENT, mItemHeight);
             mImageFetcher.setImageSize(height);
             notifyDataSetChanged();
         }

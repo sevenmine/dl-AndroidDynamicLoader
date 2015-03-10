@@ -1,27 +1,20 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2012 The Android Open Source Project Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
-
 package com.example.android.bitmapfun.util;
+
+import java.lang.ref.WeakReference;
 
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -29,46 +22,42 @@ import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import java.lang.ref.WeakReference;
-
-import com.dianping.loader.MyResources;
-
 /**
- * This class wraps up completing some arbitrary long running work when loading a bitmap to an
- * ImageView. It handles things like using a memory and disk cache, running the work in a background
- * thread and setting a placeholder image.
+ * This class wraps up completing some arbitrary long running work when loading a bitmap to an ImageView. It handles
+ * things like using a memory and disk cache, running the work in a background thread and setting a placeholder image.
  */
 public abstract class ImageWorker {
-    private static final String TAG = "ImageWorker";
-    private static final int FADE_IN_TIME = 200;
 
-    private ImageCache mImageCache;
+    private static final String         TAG                     = "ImageWorker";
+    private static final int            FADE_IN_TIME            = 200;
+
+    private ImageCache                  mImageCache;
     private ImageCache.ImageCacheParams mImageCacheParams;
-    private Bitmap mLoadingBitmap;
-    private boolean mFadeInBitmap = true;
-    private boolean mExitTasksEarly = false;
-    protected boolean mPauseWork = false;
-    private final Object mPauseWorkLock = new Object();
+    private Bitmap                      mLoadingBitmap;
+    private boolean                     mFadeInBitmap           = true;
+    private boolean                     mExitTasksEarly         = false;
+    protected boolean                   mPauseWork              = false;
+    private final Object                mPauseWorkLock          = new Object();
 
-    protected Resources mResources;
+    protected Resources                 mResources;
 
-    private static final int MESSAGE_CLEAR = 0;
-    private static final int MESSAGE_INIT_DISK_CACHE = 1;
-    private static final int MESSAGE_FLUSH = 2;
-    private static final int MESSAGE_CLOSE = 3;
+    private static final int            MESSAGE_CLEAR           = 0;
+    private static final int            MESSAGE_INIT_DISK_CACHE = 1;
+    private static final int            MESSAGE_FLUSH           = 2;
+    private static final int            MESSAGE_CLOSE           = 3;
 
-    protected ImageWorker(Context context) {
-    	mResources = context.getResources();
+    protected ImageWorker(Context context){
+        mResources = context.getResources();
     }
 
     /**
      * Load an image specified by the data parameter into an ImageView (override
-     * {@link ImageWorker#processBitmap(Object)} to define the processing logic). A memory and
-     * disk cache will be used if an {@link ImageCache} has been added using
-     * {@link ImageWorker#addImageCache(FragmentManager, ImageCache.ImageCacheParams)}. If the
-     * image is found in the memory cache, it is set immediately, otherwise an {@link AsyncTask}
-     * will be created to asynchronously load the bitmap.
-     *
+     * {@link ImageWorker#processBitmap(Object)} to define the processing logic). A memory and disk cache will be used
+     * if an {@link ImageCache} has been added using
+     * {@link ImageWorker#addImageCache(FragmentManager, ImageCache.ImageCacheParams)}. If the image is found in the
+     * memory cache, it is set immediately, otherwise an {@link AsyncTask} will be created to asynchronously load the
+     * bitmap.
+     * 
      * @param data The URL of the image to download.
      * @param imageView The ImageView to bind the downloaded image to.
      */
@@ -88,8 +77,7 @@ public abstract class ImageWorker {
             imageView.setImageDrawable(value);
         } else if (cancelPotentialWork(data, imageView)) {
             final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-            final AsyncDrawable asyncDrawable =
-                    new AsyncDrawable(mResources, mLoadingBitmap, task);
+            final AsyncDrawable asyncDrawable = new AsyncDrawable(mResources, mLoadingBitmap, task);
             imageView.setImageDrawable(asyncDrawable);
 
             // NOTE: This uses a custom version of AsyncTask that has been pulled from the
@@ -101,41 +89,39 @@ public abstract class ImageWorker {
 
     /**
      * Set placeholder bitmap that shows when the the background thread is running.
-     *
+     * 
      * @param bitmap
      */
     public void setLoadingImage(Bitmap bitmap) {
         mLoadingBitmap = bitmap;
     }
 
-//    /**
-//     * Set placeholder bitmap that shows when the the background thread is running.
-//     *
-//     * @param resId
-//     */
-//    public void setLoadingImage(int resId) {
-//        mLoadingBitmap = BitmapFactory.decodeResource(mResources, resId);
-//    }
+    // /**
+    // * Set placeholder bitmap that shows when the the background thread is running.
+    // *
+    // * @param resId
+    // */
+    // public void setLoadingImage(int resId) {
+    // mLoadingBitmap = BitmapFactory.decodeResource(mResources, resId);
+    // }
 
     /**
-     * Adds an {@link ImageCache} to this {@link ImageWorker} to handle disk and memory bitmap
-     * caching.
+     * Adds an {@link ImageCache} to this {@link ImageWorker} to handle disk and memory bitmap caching.
+     * 
      * @param fragmentManager
      * @param cacheParams The cache parameters to use for the image cache.
      */
-    public void addImageCache(FragmentManager fragmentManager,
-            ImageCache.ImageCacheParams cacheParams) {
+    public void addImageCache(FragmentManager fragmentManager, ImageCache.ImageCacheParams cacheParams) {
         mImageCacheParams = cacheParams;
         mImageCache = ImageCache.getInstance(fragmentManager, mImageCacheParams);
         new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
     }
 
     /**
-     * Adds an {@link ImageCache} to this {@link ImageWorker} to handle disk and memory bitmap
-     * caching.
+     * Adds an {@link ImageCache} to this {@link ImageWorker} to handle disk and memory bitmap caching.
+     * 
      * @param activity
-     * @param diskCacheDirectoryName See
-     * {@link ImageCache.ImageCacheParams#ImageCacheParams(Context, String)}.
+     * @param diskCacheDirectoryName See {@link ImageCache.ImageCacheParams#ImageCacheParams(Context, String)}.
      */
     public void addImageCache(Activity activity, String diskCacheDirectoryName) {
         mImageCacheParams = new ImageCache.ImageCacheParams(activity, diskCacheDirectoryName);
@@ -156,12 +142,12 @@ public abstract class ImageWorker {
     }
 
     /**
-     * Subclasses should override this to define any processing or work that must happen to produce
-     * the final bitmap. This will be executed in a background thread and be long running. For
-     * example, you could resize a large bitmap here, or pull down an image from the network.
-     *
+     * Subclasses should override this to define any processing or work that must happen to produce the final bitmap.
+     * This will be executed in a background thread and be long running. For example, you could resize a large bitmap
+     * here, or pull down an image from the network.
+     * 
      * @param data The data to identify which image to process, as provided by
-     *            {@link ImageWorker#loadImage(Object, ImageView)}
+     * {@link ImageWorker#loadImage(Object, ImageView)}
      * @return The processed bitmap
      */
     protected abstract Bitmap processBitmap(Object data);
@@ -175,6 +161,7 @@ public abstract class ImageWorker {
 
     /**
      * Cancels any pending work attached to the provided ImageView.
+     * 
      * @param imageView
      */
     public static void cancelWork(ImageView imageView) {
@@ -187,10 +174,8 @@ public abstract class ImageWorker {
     }
 
     /**
-     * Returns true if the current work has been canceled or if there was no work in
-     * progress on this image view.
-     * Returns false if the work in progress deals with the same data. The work is not
-     * stopped in that case.
+     * Returns true if the current work has been canceled or if there was no work in progress on this image view.
+     * Returns false if the work in progress deals with the same data. The work is not stopped in that case.
      */
     public static boolean cancelPotentialWork(Object data, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
@@ -210,8 +195,8 @@ public abstract class ImageWorker {
 
     /**
      * @param imageView Any imageView
-     * @return Retrieve the currently active work task (if any) associated with this imageView.
-     * null if there is no such task.
+     * @return Retrieve the currently active work task (if any) associated with this imageView. null if there is no such
+     * task.
      */
     private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
         if (imageView != null) {
@@ -228,10 +213,11 @@ public abstract class ImageWorker {
      * The actual AsyncTask that will asynchronously process the image.
      */
     private class BitmapWorkerTask extends AsyncTask<Object, Void, BitmapDrawable> {
-        private Object data;
+
+        private Object                         data;
         private final WeakReference<ImageView> imageViewReference;
 
-        public BitmapWorkerTask(ImageView imageView) {
+        public BitmapWorkerTask(ImageView imageView){
             imageViewReference = new WeakReference<ImageView>(imageView);
         }
 
@@ -252,7 +238,8 @@ public abstract class ImageWorker {
                 while (mPauseWork && !isCancelled()) {
                     try {
                         mPauseWorkLock.wait();
-                    } catch (InterruptedException e) {}
+                    } catch (InterruptedException e) {
+                    }
                 }
             }
 
@@ -260,8 +247,7 @@ public abstract class ImageWorker {
             // thread and the ImageView that was originally bound to this task is still bound back
             // to this task and our "exit early" flag is not set then try and fetch the bitmap from
             // the cache
-            if (mImageCache != null && !isCancelled() && getAttachedImageView() != null
-                    && !mExitTasksEarly) {
+            if (mImageCache != null && !isCancelled() && getAttachedImageView() != null && !mExitTasksEarly) {
                 bitmap = mImageCache.getBitmapFromDiskCache(dataString);
             }
 
@@ -269,8 +255,7 @@ public abstract class ImageWorker {
             // another thread and the ImageView that was originally bound to this task is still
             // bound back to this task and our "exit early" flag is not set, then call the main
             // process method (as implemented by a subclass)
-            if (bitmap == null && !isCancelled() && getAttachedImageView() != null
-                    && !mExitTasksEarly) {
+            if (bitmap == null && !isCancelled() && getAttachedImageView() != null && !mExitTasksEarly) {
                 bitmap = processBitmap(params[0]);
             }
 
@@ -324,8 +309,8 @@ public abstract class ImageWorker {
         }
 
         /**
-         * Returns the ImageView associated with this task as long as the ImageView's task still
-         * points to this task as well. Returns null otherwise.
+         * Returns the ImageView associated with this task as long as the ImageView's task still points to this task as
+         * well. Returns null otherwise.
          */
         private ImageView getAttachedImageView() {
             final ImageView imageView = imageViewReference.get();
@@ -340,18 +325,17 @@ public abstract class ImageWorker {
     }
 
     /**
-     * A custom Drawable that will be attached to the imageView while the work is in progress.
-     * Contains a reference to the actual worker task, so that it can be stopped if a new binding is
-     * required, and makes sure that only the last started worker process can bind its result,
-     * independently of the finish order.
+     * A custom Drawable that will be attached to the imageView while the work is in progress. Contains a reference to
+     * the actual worker task, so that it can be stopped if a new binding is required, and makes sure that only the last
+     * started worker process can bind its result, independently of the finish order.
      */
     private static class AsyncDrawable extends BitmapDrawable {
+
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
-        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask){
             super(res, bitmap);
-            bitmapWorkerTaskReference =
-                new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+            bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
         }
 
         public BitmapWorkerTask getBitmapWorkerTask() {
@@ -360,23 +344,18 @@ public abstract class ImageWorker {
     }
 
     /**
-     * Called when the processing is complete and the final drawable should be 
-     * set on the ImageView.
-     *
+     * Called when the processing is complete and the final drawable should be set on the ImageView.
+     * 
      * @param imageView
      * @param drawable
      */
     private void setImageDrawable(ImageView imageView, Drawable drawable) {
         if (mFadeInBitmap) {
             // Transition drawable with a transparent drawable and the final drawable
-            final TransitionDrawable td =
-                    new TransitionDrawable(new Drawable[] {
-                            new ColorDrawable(android.R.color.transparent),
-                            drawable
-                    });
+            final TransitionDrawable td = new TransitionDrawable(new Drawable[] {
+                    new ColorDrawable(android.R.color.transparent), drawable });
             // Set background to loading bitmap
-            imageView.setBackgroundDrawable(
-                    new BitmapDrawable(mResources, mLoadingBitmap));
+            imageView.setBackgroundDrawable(new BitmapDrawable(mResources, mLoadingBitmap));
 
             imageView.setImageDrawable(td);
             td.startTransition(FADE_IN_TIME);
@@ -386,16 +365,13 @@ public abstract class ImageWorker {
     }
 
     /**
-     * Pause any ongoing background work. This can be used as a temporary
-     * measure to improve performance. For example background work could
-     * be paused when a ListView or GridView is being scrolled using a
-     * {@link android.widget.AbsListView.OnScrollListener} to keep
-     * scrolling smooth.
+     * Pause any ongoing background work. This can be used as a temporary measure to improve performance. For example
+     * background work could be paused when a ListView or GridView is being scrolled using a
+     * {@link android.widget.AbsListView.OnScrollListener} to keep scrolling smooth.
      * <p>
-     * If work is paused, be sure setPauseWork(false) is called again
-     * before your fragment or activity is destroyed (for example during
-     * {@link android.app.Activity#onPause()}), or there is a risk the
-     * background thread will never finish.
+     * If work is paused, be sure setPauseWork(false) is called again before your fragment or activity is destroyed (for
+     * example during {@link android.app.Activity#onPause()}), or there is a risk the background thread will never
+     * finish.
      */
     public void setPauseWork(boolean pauseWork) {
         synchronized (mPauseWorkLock) {
@@ -410,7 +386,7 @@ public abstract class ImageWorker {
 
         @Override
         protected Void doInBackground(Object... params) {
-            switch ((Integer)params[0]) {
+            switch ((Integer) params[0]) {
                 case MESSAGE_CLEAR:
                     clearCacheInternal();
                     break;

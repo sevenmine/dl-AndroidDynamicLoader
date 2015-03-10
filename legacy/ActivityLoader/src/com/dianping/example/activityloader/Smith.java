@@ -3,62 +3,58 @@ package com.dianping.example.activityloader;
 import java.lang.reflect.Field;
 
 public class Smith<T> {
-	private Object obj;
-	private String fieldName;
 
-	private boolean inited;
-	private Field field;
+    private Object  obj;
+    private String  fieldName;
 
-	public Smith(Object obj, String fieldName) {
-		if (obj == null) {
-			throw new IllegalArgumentException("obj cannot be null");
-		}
-		this.obj = obj;
-		this.fieldName = fieldName;
-	}
+    private boolean inited;
+    private Field   field;
 
-	private void prepare() {
-		if (inited)
-			return;
-		inited = true;
+    public Smith(Object obj, String fieldName){
+        if (obj == null) {
+            throw new IllegalArgumentException("obj cannot be null");
+        }
+        this.obj = obj;
+        this.fieldName = fieldName;
+    }
 
-		Class<?> c = obj.getClass();
-		while (c != null) {
-			try {
-				Field f = c.getDeclaredField(fieldName);
-				f.setAccessible(true);
-				field = f;
-				return;
-			} catch (Exception e) {
-			} finally {
-				c = c.getSuperclass();
-			}
-		}
-	}
+    private void prepare() {
+        if (inited) return;
+        inited = true;
 
-	public T get() throws NoSuchFieldException, IllegalAccessException,
-			IllegalArgumentException {
-		prepare();
+        Class<?> c = obj.getClass();
+        while (c != null) {
+            try {
+                Field f = c.getDeclaredField(fieldName);
+                f.setAccessible(true);
+                field = f;
+                return;
+            } catch (Exception e) {
+            } finally {
+                c = c.getSuperclass();
+            }
+        }
+    }
 
-		if (field == null)
-			throw new NoSuchFieldException();
+    public T get() throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
+        prepare();
 
-		try {
-			@SuppressWarnings("unchecked")
-			T r = (T) field.get(obj);
-			return r;
-		} catch (ClassCastException e) {
-			throw new IllegalArgumentException("unable to cast object");
-		}
-	}
+        if (field == null) throw new NoSuchFieldException();
 
-	public void set(T val) throws NoSuchFieldException, IllegalAccessException,
-			IllegalArgumentException {
-		prepare();
+        try {
+            @SuppressWarnings("unchecked")
+            T r = (T) field.get(obj);
+            return r;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("unable to cast object");
+        }
+    }
 
-		if (field == null)
-			throw new NoSuchFieldException();
+    public void set(T val) throws NoSuchFieldException, IllegalAccessException, IllegalArgumentException {
+        prepare();
 
-		field.set(obj, val);
-	}
+        if (field == null) throw new NoSuchFieldException();
+
+        field.set(obj, val);
+    }
 }
